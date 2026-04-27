@@ -20,15 +20,17 @@ docker pull prom/prometheus:main-distroless
 
 2.	La lancer : docker run -d --name prometheus -p 9090:9090 prom/prometheus:latest
 
-![alt text](commande_docker.png)
+````
+docker run -d --name prometheus -p 9090:9090 prom/prometheus:main-distroless
+``
 
 3.	Ouvrir http://localhost:9090 dans votre navigateur
 
-![alt text](url_localhost.png)
+![alt text](ex1-3.png)
 
 4.	Aller dans **Status > Targets** et confirmer que la cible prometheus est UP
 
-![alt text](prometheus_status.png)
+![alt text](ex1-4.png)
 
 5.	Exécuter docker logs prometheus et lire la ligne de démarrage qui annonce le répertoire de stockage
 
