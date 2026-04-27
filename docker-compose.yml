@@ -12,3 +12,12 @@ services:
       - '--web.enable-lifecycle'
       - '--config.file=/etc/prometheus/prometheus.yml'
 
+
+  node_exporter:
+    image: prom/node-exporter:master-distroless
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+
+

@@ -115,3 +115,43 @@ Indices
 •	external_labels se place sous le bloc global:.
 •	Sans --web.enable-lifecycle, l'endpoint /-/reload renvoie 405.
 
+# Exercice 3 : Ajouter node_exporter et scraper les métriques système
+
+## Objectif
+
+Lancer node_exporter et configurer Prometheus pour le scraper. Vérifier que la métrique node_cpu_seconds_total apparaît dans l'expression browser.
+
+## Prérequis
+
+•	Un Prometheus en cours d'exécution issu des exercices précédents
+
+Étapes
+11.	Lancer node_exporter : docker run -d --name node-exporter -p 9100:9100 prom/node-exporter:latest
+
+```
+docker run -d --name node-exporter -p 9100:9100 prom/node-exporter:master-distroless
+```
+
+
+12.	Ajouter un nouveau job nommé 'node' dans prometheus.yml pointant vers host.docker.internal:9100 (Mac/Windows) ou l'IP du conteneur (Linux)
+
+````
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node_exporter:9100']
+````
+
+13.	Déclencher un rechargement (ou recréer le conteneur) puis confirmer que la cible est UP
+
+````
+docker-compose down
+````
+
+14.	Exécuter la requête : node_cpu_seconds_total dans l'expression browser
+
+![alt text](exo3-14.png)
+
+Indices
+•	Un DaemonSet garantit un pod node-exporter par nœud.
+•	Sans relabeling, Prometheus essaie de scraper le port du kubelet au lieu de 9100.
+
