@@ -1,0 +1,19 @@
+# name: api
+# interval: 30s
+
+# rules:
+#   - record: job:http_requests:rate5m
+
+groups:
+   - name: http_requests_rules
+     interval: 30s
+     rules:
+#       - record: demo_http_requests_total{method, endpoint, status}
+#         expr: sum(rate(http_requests_total[5m])) by (job)
+
+     # Taux global de requêtes HTTP sur 5 minutes, agrégé par job
+      - record: job:http_requests:rate5m
+        expr: |
+          sum by (job) (
+            rate(demo_http_requests_total[5m])
+          )

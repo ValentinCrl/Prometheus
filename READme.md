@@ -155,3 +155,63 @@ Indices
 •	Un DaemonSet garantit un pod node-exporter par nœud.
 •	Sans relabeling, Prometheus essaie de scraper le port du kubelet au lieu de 9100.
 
+# Exercice 5 : Règles d'enregistrement (recording rules)
+
+## Objectif
+
+Pré-calculer une requête coûteuse sous forme de règle d'enregistrement. Créer un fichier de règles qui enregistre job:http_requests:rate5m toutes les 30 secondes.
+
+Prérequis
+•	L'application demo-api en cours d'exécution et scrapée
+
+Étapes
+
+19.	Créer rules/api_rules.yml avec un seul groupe et une seule règle
+
+Dans le fichier api_rules.yml, on ajoute ces parametres :
+
+```
+groups:
+   - name: http_requests_rules
+     interval: 30s
+     rules:
+
+      - record: job:http_requests:rate5m
+        expr: |
+          sum by (job) (
+            rate(demo_http_requests_total[5m])
+          )
+    
+```
+
+20.	Monter le répertoire sur /etc/prometheus/rules
+
+Dans mon docker-compose, je mappe le dossier ./rules/api_rules.yml dans le répertoire /etc/prometheus/rules.
+
+```
+- ./rules/api_rules.yml:/etc/prometheus/rules
+```
+
+21.	Dans prometheus.yml, ajouter rule_files: ['/etc/prometheus/rules/*.yml']
+
+```
+rule_files:
+  - /etc/prometheus/rules/*.yml  
+```
+
+22.	Recharger Prometheus
+
+On recharge prometheus avec la commande 
+```
+curl -X POST http://localhost:9090/-/reload
+```
+
+
+23.	Interroger la nouvelle métrique job:http_requests:rate5m et vérifier qu'elle renvoie des données
+
+## Indices
+
+•	Une règle d'enregistrement a la forme : <nouveau_nom_metrique>: <expression PromQL>.
+
+•	Status > Rules confirme la prise en compte et la fréquence d'évaluation.
+ 

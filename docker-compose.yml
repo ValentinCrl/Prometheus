@@ -8,10 +8,11 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./rules:/etc/prometheus/rules
     command:
       - '--web.enable-lifecycle'
       - '--config.file=/etc/prometheus/prometheus.yml'
-
+    
 
   node_exporter:
     image: prom/node-exporter:master-distroless
@@ -19,5 +20,16 @@ services:
     ports:
       - "9100:9100"
     restart: unless-stopped
+
+
+  app:
+    build: 
+      context: ./app2
+    container_name: app
+    ports:
+      - "8000:8000"
+    restart: unless-stopped 
+
+
 
 

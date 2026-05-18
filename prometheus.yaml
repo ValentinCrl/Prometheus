@@ -3,7 +3,8 @@ global:
   external_labels:
     environment: 'prod'  # Label global pour identifier l'environnement
 
-  
+rule_files:
+  - "rules/*.yml"  # Fichier de règles pour les métriques d'API
 
 scrape_configs:
   - job_name: 'prometheus'
@@ -13,6 +14,10 @@ scrape_configs:
   - job_name: 'node'
     static_configs:
       - targets: ['node_exporter:9100']
+
+  - job_name: 'app'
+    static_configs:
+      - targets: ['app:8000']
 
 
 
